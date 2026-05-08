@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Order Summary</title>
+
+<style>
+:root {
+    --main-blue: #003366;
+    --light-blue: #f4f8fc;
+    --accent-yellow: #FFD700;
+}
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background: var(--light-blue);
+}
+
+.header {
+    background: var(--main-blue);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    color: var(--main-blue);
+}
+
+.info {
+    margin-bottom: 20px;
+}
+
+.info p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.summary {
+    background: var(--light-blue);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.summary p {
+    margin: 8px 0;
+}
+
+.total {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--main-blue);
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.confirm {
+    background: var(--main-blue);
+    color: white;
+}
+
+.back {
+    background: #ccc;
+}
+
+.confirm:hover {
+    background: #002244;
+}
+
+.back:hover {
+    background: #999;
+}
+</style>
+</head>
+
+<body>
+<div th:replace="fragments/cookies :: cookieBanner"></div>
+
+<div class="header">Payment Summary</div>
+
+<div class="container">
+
+<h2>Order Summary</h2>
+
+<div class="info">
+    <p><strong>Student ID:</strong> <span th:text="${payment.studentId}"></span></p>
+    <p><strong>Name:</strong> <span th:text="${payment.fullName}"></span></p>
+    <p><strong>Payment Method:</strong> <span th:text="${payment.paymentMethod}"></span></p>
+</div>
+
+<div class="summary">
+    <p>Fees: <span th:text="${fees}"></span> EGP</p>
+    <p>Discount: <span th:text="${discount}"></span> EGP</p>
+    <p class="total">Total: <span th:text="${total}"></span> EGP</p>
+</div>
+
+<div class="summary" th:if="${cartItems != null and !#lists.isEmpty(cartItems)}">
+    <p><strong>Purchased Items</strong></p>
+    <p th:each="ci : ${cartItems}"
+       th:text="${ci.type + ' - ' + ci.name + ' x' + ci.quantity + ' : ' + #numbers.formatDecimal(ci.lineTotal,1,2) + ' EGP'}">
+        Item
+    </p>
+</div>
+
+<div class="buttons">
+    <a class="back" th:href="@{/payment}" style="display:inline-block; text-align:center; line-height: 24px;">Back</a>
+    <form th:action="@{/confirmPayment}" method="post" style="margin:0; flex:1;">
+        <button class="confirm" type="submit" style="width:100%;">Confirm</button>
+    </form>
+</div>
+
+</div>
+
+</body>
+</html>

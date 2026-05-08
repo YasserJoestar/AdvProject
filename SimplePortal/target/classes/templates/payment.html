@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Page</title>
+    <style>
+        :root {
+            --main-blue: #003366;
+            --light-blue: #f4f8fc;
+            --accent-yellow: #FFD700;
+            --white: #ffffff;
+            --gray: #777;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--main-blue);
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: var(--main-blue);
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white; /* Added for visibility */
+            letter-spacing: 1px;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: 40px auto;
+            background: var(--light-blue);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--main-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .selected-item {
+            margin-bottom: 15px;
+            background-color: #fff8d6;
+            border: 1px solid #e3d287;
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #0b1f3a;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: var(--main-blue);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Ensures padding doesn't break width */
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--main-blue);
+        }
+
+        .btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--main-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #002244;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: white; /* Changed for readability against dark background */
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/cookies :: cookieBanner"></div>
+
+<div class="header">
+    Student Payment Portal
+</div>
+
+<div class="container">
+    <h2>Pay Tuition Fees</h2>
+    <div class="selected-item" th:if="${cartItems != null and !#lists.isEmpty(cartItems)}">
+        <strong>Items in Cart:</strong>
+        <ul style="margin:8px 0 0 20px; padding:0;">
+            <li th:each="ci : ${cartItems}"
+                th:text="${ci.type + ' - ' + ci.name + ' x' + ci.quantity + ' (' + #numbers.formatDecimal(ci.lineTotal,1,2) + ' EGP)'}">
+                Item
+            </li>
+        </ul>
+        <div style="margin-top:8px;">
+            <strong>Total: <span th:text="${#numbers.formatDecimal(cartTotal,1,2)}">0.00</span> EGP</strong>
+        </div>
+    </div>
+    <div class="selected-item" th:if="${item != null}">
+        Paying for
+        <strong th:text="${type != null ? type : 'Item'}">Item</strong>:
+        <strong th:text="${item}">Item Name</strong>
+        <span th:if="${price != null}">
+            - <strong th:text="${price + ' EGP'}">0.00 EGP</strong>
+        </span>
+    </div>
+
+    <!-- th:action points to the controller mapping, th:object binds the form to a Java bean -->
+    <form th:action="@{/processPayment}" th:object="${payment}" method="post">
+        
+        <label for="studentId">Student ID</label>
+        <input type="text" id="studentId" th:field="*{studentId}" placeholder="Enter your ID" required>
+
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" th:field="*{fullName}" placeholder="Enter your name" required>
+
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" th:field="*{paymentMethod}">
+            <option value="Credit Card">Credit Card</option>
+            <option value="Vodafone Cash">Vodafone Cash</option>
+            <option value="Instapay">Instapay</option>
+        </select>
+
+        <label for="cardNumber">Card Number</label>
+        <input type="text" id="cardNumber" th:field="*{cardNumber}" placeholder="XXXX XXXX XXXX XXXX">
+
+        <label for="expiryDate">Expiry Date</label>
+        <input type="month" id="expiryDate" th:field="*{expiryDate}">
+
+        <label for="cvv">CVV</label>
+        <input type="password" id="cvv" th:field="*{cvv}" placeholder="***">
+
+        <button type="submit" class="btn">Next</button>
+    </form>
+</div>
+
+<div class="footer">
+    &copy; 2026 University System
+</div>
+
+</body>
+</html>
