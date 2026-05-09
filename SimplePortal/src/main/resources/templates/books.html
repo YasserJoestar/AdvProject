@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+
+    <style>
+        body {
+            background-color: #0b1f3a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #f1c40f;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #f1c40f;
+        }
+
+        .links {
+            margin-bottom: 15px;
+        }
+
+        .links a, .links span {
+            color: #f1c40f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card {
+            background-color: #112b52;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            background-color: #112b52;
+        }
+
+        th {
+            background-color: #0b1f3a;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #f1c40f;
+            color: #f1c40f;
+        }
+
+        tr:hover {
+            background-color: #1b3b6f;
+        }
+
+        .buy-btn {
+            background-color: #f1c40f;
+            color: #0b1f3a;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 14px;
+            font-size: 15px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .buy-btn:hover {
+            background-color: #d4ac0d;
+        }
+
+        .empty {
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/cookies :: cookieBanner"></div>
+<div class="page">
+    <h1>Books</h1>
+    <div class="links">
+        <a th:href="@{/dashboard}">Back to Dashboard</a>
+        <span> | </span>
+        <a th:href="@{/cart}">Go to Cart</a>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>TITLE</th>
+                <th>AUTHOR</th>
+                <th>PRICE (EGP)</th>
+                <th>STOCK</th>
+                <th>BUY</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(books)}">
+                <td colspan="5" class="empty">No books available.</td>
+            </tr>
+            <tr th:each="b : ${books}">
+                <td th:text="${b.title}"></td>
+                <td th:text="${b.author}"></td>
+                <td th:text="${#numbers.formatDecimal(b.price,1,2)}"></td>
+                <td th:text="${b.stock}"></td>
+                <td>
+                    <form th:action="@{/cart/add}" method="post" style="margin:0;">
+                        <input type="hidden" name="type" value="Book">
+                        <input type="hidden" name="productRefId" th:value="${b.id}">
+                        <input type="hidden" name="name" th:value="${b.title}">
+                        <input type="hidden" name="price" th:value="${b.price}">
+                        <input type="hidden" name="redirectTo" value="/books">
+                        <button class="buy-btn" type="submit">Buy</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
