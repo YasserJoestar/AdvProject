@@ -1,12 +1,12 @@
 package com.example.simpleportal.Service;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.simpleportal.Model.ScheduleSlot;
-
-import java.util.List;
 
 public interface ScheduleSlotRepository extends JpaRepository<ScheduleSlot, Long> {
     List<ScheduleSlot> findByStudent_IdOrderByDayAscTimeSlotAsc(Long studentId);

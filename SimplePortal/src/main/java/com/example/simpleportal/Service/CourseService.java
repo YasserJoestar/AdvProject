@@ -1,10 +1,14 @@
 package com.example.simpleportal.Service;
 
-import com.example.simpleportal.Model.*;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Locale;
+
+import org.springframework.stereotype.Service;
+
+import com.example.simpleportal.Model.CatalogCourse;
+import com.example.simpleportal.Model.Course;
+import com.example.simpleportal.Model.Enrollment;
+import com.example.simpleportal.Model.Student;
 
 @Service
 public class CourseService {

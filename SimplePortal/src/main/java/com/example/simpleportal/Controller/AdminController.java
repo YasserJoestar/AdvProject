@@ -1,18 +1,25 @@
 package com.example.simpleportal.Controller;
 
-import com.example.simpleportal.Model.*;
-import com.example.simpleportal.Service.*;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
-/**
- * AdminController – all routes under /admin/…
- * Every handler verifies COOKIE_ROLE == ADMIN before proceeding.
- */
+import com.example.simpleportal.Model.Book;
+import com.example.simpleportal.Model.ScheduleSlot;
+import com.example.simpleportal.Model.StoreCourse;
+import com.example.simpleportal.Model.Student;
+import com.example.simpleportal.Service.ActivityLogService;
+import com.example.simpleportal.Service.BookRepository;
+import com.example.simpleportal.Service.OrderItemRepository;
+import com.example.simpleportal.Service.OrderRepository;
+import com.example.simpleportal.Service.ScheduleSlotRepository;
+import com.example.simpleportal.Service.StoreCourseRepository;
+import com.example.simpleportal.Service.StudentRepository;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -40,8 +47,6 @@ public class AdminController {
         this.scheduleRepo    = scheduleRepo;
         this.logService      = logService;
     }
-
-    // ── Admin Dashboard ────────────────────────────────────────
     @GetMapping("/dashboard")
     public String dashboard(
             @CookieValue(name = PageController.COOKIE_ROLE, required = false) String role,
@@ -63,8 +68,6 @@ public class AdminController {
         model.addAttribute("recentLogs",   logService.getAll().stream().limit(10).toList());
         return "AdminDashboard";
     }
-
-    // ── Manage Students (view only) ────────────────────────────
     @GetMapping("/students")
     public String students(
             @CookieValue(name = PageController.COOKIE_ROLE, required = false) String role,
@@ -73,8 +76,6 @@ public class AdminController {
         model.addAttribute("students", studentRepo.findByRoleIgnoreCaseOrderByNameAsc("STUDENT"));
         return "AdminStudents";
     }
-
-    // ── Manage Books ───────────────────────────────────────────
     @GetMapping("/books")
     public String books(
             @CookieValue(name = PageController.COOKIE_ROLE, required = false) String role,
@@ -112,8 +113,6 @@ public class AdminController {
         });
         return "redirect:/admin/books";
     }
-
-    // ── Manage Store Courses ───────────────────────────────────
     @GetMapping("/courses")
     public String courses(
             @CookieValue(name = PageController.COOKIE_ROLE, required = false) String role,
@@ -150,8 +149,6 @@ public class AdminController {
         });
         return "redirect:/admin/courses";
     }
-
-    // ── Manage Schedules ───────────────────────────────────────
     @GetMapping("/schedules")
     public String schedules(
             @CookieValue(name = PageController.COOKIE_ROLE, required = false) String role,
@@ -196,8 +193,6 @@ public class AdminController {
         });
         return "redirect:/admin/schedules";
     }
-
-    // ── View All Orders ────────────────────────────────────────
     @GetMapping("/orders")
     public String orders(
             @CookieValue(name = PageController.COOKIE_ROLE, required = false) String role,
@@ -208,8 +203,6 @@ public class AdminController {
         model.addAttribute("orders", orderRepo.findAll());
         return "Adminorders";
     }
-
-    // ── Full Activity History ──────────────────────────────────
     @GetMapping("/history")
     public String history(
             @CookieValue(name = PageController.COOKIE_ROLE, required = false) String role,
@@ -218,8 +211,6 @@ public class AdminController {
         model.addAttribute("logs", logService.getAll());
         return "history";
     }
-
-    // ── Helpers ────────────────────────────────────────────────
     private boolean isAdmin(String role) { return "ADMIN".equalsIgnoreCase(role); }
 
     private String resolveAdminName(String cookieId) {
