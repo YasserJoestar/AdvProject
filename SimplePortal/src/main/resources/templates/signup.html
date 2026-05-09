@@ -2,143 +2,146 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>sign up</title>
-   <style>
-    body {
-    background-color: #0b1f3a; /* deep blue */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    margin: 0;
-    padding: 40px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #f1c40f; /* yellow text */
-    }
-
-    .container {
-    background-color: #112b52;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 400px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    margin-bottom: 50px;
-    }
-
-    h4 {
-    margin-top: 0;
-    color: #f1c40f;
-    font-size: 1.5rem;
-    text-align: center;
-    }
-
-    label {
-    color: #f1c40f;
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-    }
-
-    input[type="text"],
-    select {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #f1c40f;
-    border-radius: 5px;
-    background-color: #ffffff;
-    color: #0b1f3a;
-    box-sizing: border-box;
-    font-size: 14px;
-    }
-
-
-    button {
-    background-color: #f1c40f; /* yellow */
-    color: #0b1f3a; /* blue text */
-    border: none;
-    border-radius: 5px;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s ease;
-    }
-
-    button:hover {
-    background-color: #d4ac0d; /* darker yellow */
-    }
-
-    table {
-    width: 100%;
-    max-width: 800px;
-    border-collapse: collapse;
-    background-color: #112b52;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    th, td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #f1c40f;
-    color: #f1c40f;
-    }
-
-    th {
-    background-color: #0b1f3a;
-    color: #f1c40f;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 1px;
-    }
-
-    tr:hover {
-    background-color: #1b3b6f;
-    }
-
-    tr:last-child td {
-    border-bottom: none;
-    }
-    a {
-        color: #f1c40f; /* yellow */
-        text-decoration: none;
-    }
-
-    a:hover {
-        color: #d4ac0d; /* darker yellow on hover */
-        text-decoration: underline;
-    }
+    <title>Sign Up</title>
+    <style>
+        body {
+            background-color: #0b1f3a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #f1c40f;
+        }
+        .container {
+            background-color: #112b52;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 420px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            margin-bottom: 50px;
+        }
+        h4 { margin-top:0; color:#f1c40f; font-size:1.5rem; text-align:center; }
+        label { color:#f1c40f; display:block; margin-bottom:6px; font-weight:bold; }
+        input[type="text"], input[type="password"], input[type="number"], select {
+            width:100%; padding:12px; margin-bottom:16px;
+            border:1px solid #f1c40f; border-radius:5px;
+            background-color:#ffffff; color:#0b1f3a;
+            box-sizing:border-box; font-size:14px;
+        }
+        button {
+            background-color:#f1c40f; color:#0b1f3a; border:none;
+            border-radius:5px; padding:15px; font-size:16px;
+            font-weight:bold; cursor:pointer; transition:0.3s ease; width:100%;
+        }
+        button:hover { background-color:#d4ac0d; }
+        .alert {
+            padding:10px 14px; border-radius:5px; margin-bottom:15px;
+            font-size:13px; font-weight:bold;
+        }
+       .alert-error {
+            background-color: #e74c3c44;
+            border:1px solid #e74c3c;
+            color:#e74c3c;
+        }
+        .role-hint {
+            background-color: #0d2240;
+            border:1px solid #f1c40f44;
+            border-radius:5px;
+            padding:8px 12px;
+            font-size:12px;
+            color:#ccc;
+            margin-bottom:16px;
+        }
+        .required { color:#f1c40f; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h4>Sign up</h4>
-    <form th:action="@{/signup}" th:object="${signupForm}" method="post">
-        <label for="email">email:</label>
-        <input id="email" type="text" th:field="*{email}" placeholder="Enter email">
+    <h4>Create Account</h4>
 
-        <label for="id">ID:</label>
-        <input id="id" type="text" th:field="*{id}" placeholder="Enter ID">
-        <label for="address">Address:</label>
-        <input id="address" type="text" th:field="*{address}" placeholder="Enter address">
-        <label for="password">Password:</label>
-        <input id="password" type="password" th:field="*{password}" placeholder="Enter Password">
-        <label for="confirmPassword">confirm Password:</label>
-        <input id="confirmPassword" type="password" th:field="*{confirmPassword}" placeholder="confirm password ">
-        <label for="phone">Phone Number:</label>
-        <input id="phone" type="text" th:field="*{phone}" placeholder="Enter Phone number">
-       <label for="faculty">faculty:</label>
-        <input id="faculty" type="text" th:field="*{faculty}" placeholder="faculty">
-        <button type="submit">Sign up</button><br><br>
-        <a th:href="@{/login}">already have an account</a><br>
+
+    <div class="alert alert-error" th:if="${param.error != null}"
+         th:text="${param.error[0] == 'missing'}  ? 'Please fill in all required fields.' :
+                   (param.error[0] == 'email')    ? 'Please enter a valid email address.' :
+                   (param.error[0] == 'short')    ? 'Password must be at least 6 characters.' :
+                   (param.error[0] == 'mismatch') ? 'Passwords do not match.' :
+                   (param.error[0] == 'exists')   ? 'An account with this email already exists.' :
+                   'Registration failed. Please try again.'">
+    </div>
+
+    <form th:action="@{/signup}" th:object="${signupForm}" method="post" onsubmit="return validateSignup()">
+
+        <div id="clientError" class="alert alert-error" style="display:none;"></div>
+
+        <label>Email <span class="required">*</span></label>
+        <input type="text" th:field="*{email}" placeholder="your@email.com" required>
+
+        <label>Student ID <span class="required">*</span></label>
+        <input type="number" th:field="*{id}" placeholder="e.g. 20210001" required min="1">
+
+        <label>Password <span class="required">*</span> <small style="font-weight:normal;">(min 6 chars)</small></label>
+        <input id="passwordField" type="password" th:field="*{password}" placeholder="Create a password" required minlength="6">
+
+        <label>Confirm Password <span class="required">*</span></label>
+        <input id="confirmPasswordField" type="password" th:field="*{confirmPassword}" placeholder="Repeat your password" required minlength="6">
+
+        <label>Phone Number <span class="required">*</span></label>
+        <input type="text" th:field="*{phone}" placeholder="01xxxxxxxxx" required>
+
+        <label>Address <span class="required">*</span></label>
+        <input type="text" th:field="*{address}" placeholder="City, Street" required>
+
+        <label>Faculty</label>
+        <select th:field="*{faculty}">
+            <option value="CS">Computer Science</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Business">Business</option>
+        </select>
+
+        <label>Role <span class="required">*</span></label>
+        <select th:field="*{role}">
+            <option value="STUDENT">Student</option>
+            <option value="ADMIN">Admin</option>
+        </select>
+        <div class="role-hint">
+            <strong>Student:</strong> access grades, schedule, store &nbsp;|&nbsp;
+            <strong>Admin:</strong> manage books, courses, schedules &amp; view all data
+        </div>
+
+        <button type="submit">Create Account</button>
     </form>
-</div>
-</body>
 
+    <div style="margin-top:15px; text-align:center;">
+        <a th:href="@{/login}">Already have an account? Log in</a>
+    </div>
+</div>
+
+<script>
+    function validateSignup() {
+        const password = document.getElementById('passwordField').value;
+        const confirm = document.getElementById('confirmPasswordField').value;
+        const errorBox = document.getElementById('clientError');
+
+        if (password.length < 6) {
+            errorBox.textContent = 'Password must be at least 6 characters.';
+            errorBox.style.display = 'block';
+            return false;
+        }
+        if (password !== confirm) {
+            errorBox.textContent = 'Passwords do not match.';
+            errorBox.style.display = 'block';
+            return false;
+        }
+        errorBox.style.display = 'none';
+        return true;
+    }
+</script>
+</body>
 </html>
