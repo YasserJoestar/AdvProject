@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .main-content h1 {
+            color: #003366;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+        }
+
+        .cart-card {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eef1f5;
+        }
+
+        th {
+            background: #003366;
+            color: #ffd700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.8px;
+        }
+
+        .total-box {
+            background: #ffffff;
+            border-left: 10px solid #003366;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-link {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            background: #003366;
+            color: #ffd700;
+        }
+
+        .btn-secondary {
+            background: #ffd700;
+            color: #003366;
+        }
+
+        .empty {
+            text-align: center;
+            color: #666;
+            padding: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <div th:replace="fragments/cookies :: cookieBanner"></div>
+    <nav class="sidebar">
+        <h2>Portal</h2>
+        <ul>
+            <li><a th:href="@{/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/grades}">My Grades</a></li>
+            <li><a th:href="@{/schedule}">Schedule</a></li>
+            <li><a th:href="@{/books}">Books Store</a></li>
+            <li><a th:href="@{/Courses}">Courses Store</a></li>
+            <li class="active">My Cart</li>
+            <li><a th:href="@{/profile}">Profile</a></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <h1>My Cart</h1>
+
+        <div class="cart-card">
+            <table>
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Price (EGP)</th>
+                    <th>Qty</th>
+                    <th>Line Total</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(cartItems)}">
+                    <td colspan="6" class="empty">Your cart is empty.</td>
+                </tr>
+                <tr th:each="item, stat : ${cartItems}">
+                    <td th:text="${item.type}"></td>
+                    <td th:text="${item.name}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.price,1,2)}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.lineTotal,1,2)}"></td>
+                    <td>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="index" th:value="${stat.index}">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="total-box">
+            Total: <span th:text="${#numbers.formatDecimal(total,1,2)}">0.00</span> EGP
+        </div>
+
+        <div class="actions">
+            <a class="btn-link btn-secondary" th:href="@{/books}">Continue Shopping Books</a>
+            <a class="btn-link btn-secondary" th:href="@{/Courses}">Continue Shopping Courses</a>
+            <form th:action="@{/cart/clear}" method="post">
+                <button type="submit">Clear Cart</button>
+            </form>
+            <a class="btn-link" th:href="@{/payment}">Proceed to Payment</a>
+        </div>
+    </main>
+</div>
+</body>
+</html>

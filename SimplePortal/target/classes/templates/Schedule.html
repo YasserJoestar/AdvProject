@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+    <style>
+        :root { --navy-blue:#1a2a6c; --gold-yellow:#f1c40f; --white:#ffffff; }
+        .portal-container {
+            max-width:1000px; margin:30px auto; padding:25px;
+            background:var(--white); border-top:8px solid var(--gold-yellow);
+            border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.1);
+            font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+        }
+        h2 { color:var(--navy-blue); text-transform:uppercase; letter-spacing:1px;
+             border-bottom:2px solid #eee; padding-bottom:10px; }
+        .schedule-filter {
+            display:flex; gap:15px; margin:20px 0;
+            background:#f9f9f9; padding:15px; border-radius:8px;
+        }
+        .schedule-filter select { padding:10px; border:2px solid #ddd; border-radius:5px; flex:1; outline:none; }
+        .schedule-filter select:focus { border-color:var(--navy-blue); }
+        .btn-view {
+            background:var(--gold-yellow); color:var(--navy-blue);
+            border:none; padding:10px 30px; border-radius:5px;
+            font-weight:bold; cursor:pointer;
+        }
+        .btn-view:hover { background:#d4ac0d; }
+        .btn-clear {
+            background:#eee; color:#333; border:none; padding:10px 20px;
+            border-radius:5px; font-weight:bold; cursor:pointer;
+            text-decoration:none; display:inline-block;
+        }
+        .student-table { width:100%; border-collapse:collapse; margin-top:20px; }
+        .student-table th {
+            background:var(--navy-blue); color:var(--white);
+            padding:15px; text-transform:uppercase; font-size:0.85rem;
+        }
+        .student-table td { padding:15px; border-bottom:1px solid #eee; text-align:center; }
+        .day-label { background:#fcfcfc; font-weight:bold; color:var(--navy-blue); border-right:3px solid var(--gold-yellow); }
+        .course-slot { background:#fff9e6; color:#444; font-weight:600; border:1px solid #f9e79f; }
+        .empty { color:#aaa; font-style:italic; }
+        @media(max-width:768px){ .schedule-filter{flex-direction:column;} .schedule-wrapper{overflow-x:auto;} }
+    </style>
+</head>
+<body>
+<div class="portal-container">
+    <h2>My Schedule
+        <span th:if="${student != null}"
+              style="font-size:14px; font-weight:normal; letter-spacing:0; text-transform:none; color:#666;"
+              th:text="'— ' + ${student.name}"></span>
+    </h2>
+
+    <div style="margin-bottom:15px;">
+        <a th:href="@{/dashboard}" style="text-decoration:none; font-weight:bold; color:#1a2a6c;">← Back to Dashboard</a>
+    </div>
+
+   
+    <form class="schedule-filter" th:action="@{/schedule}" method="get">
+        <select name="day">
+            <option value=""          th:selected="${day == null or day == ''}">All Days</option>
+            <option value="Sunday"    th:selected="${day == 'Sunday'}">Sunday</option>
+            <option value="Monday"    th:selected="${day == 'Monday'}">Monday</option>
+            <option value="Tuesday"   th:selected="${day == 'Tuesday'}">Tuesday</option>
+            <option value="Wednesday" th:selected="${day == 'Wednesday'}">Wednesday</option>
+            <option value="Thursday"  th:selected="${day == 'Thursday'}">Thursday</option>
+            <option value="Friday"    th:selected="${day == 'Friday'}">Friday</option>
+            <option value="Saturday"  th:selected="${day == 'Saturday'}">Saturday</option>
+        </select>
+        <button type="submit" class="btn-view">Filter</button>
+        <a class="btn-clear" th:href="@{/schedule}">Clear</a>
+    </form>
+
+    <div class="schedule-wrapper">
+        <table class="student-table">
+            <thead>
+            <tr>
+                <th>Day</th>
+                <th>Time Slot</th>
+                <th>Course</th>
+                <th>Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(slots)}">
+                <td colspan="4" class="empty">
+                    No slots found
+                    <span th:if="${day != null and day != ''}"> for <strong th:text="${day}"></strong></span>.
+                    Contact your admin to assign schedule.
+                </td>
+            </tr>
+            <tr th:each="slot : ${slots}">
+                <td class="day-label"   th:text="${slot.day}">-</td>
+                <td class="course-slot" th:text="${slot.timeSlot}">-</td>
+                <td class="course-slot" th:text="${slot.courseName}">-</td>
+                <td                     th:text="${slot.location}">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
