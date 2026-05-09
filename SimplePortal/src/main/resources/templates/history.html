@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Activity History</title>
+    <style>
+        body {
+            background-color: #0b1f3a;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start;
+            min-height: 100vh; margin: 0; padding: 30px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #f1c40f;
+        }
+        .page { width:100%; max-width:900px; margin:0 auto; }
+        .navbar a, .navbar span { color:#f1c40f; text-decoration:none; font-weight:bold; }
+        h1 { color:#f1c40f; margin:10px 0 20px; }
+        .card {
+            background-color:#112b52; border-radius:8px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.3); overflow:hidden;
+        }
+        table { width:100%; border-collapse:collapse; }
+        th {
+            background-color:#0b1f3a; color:#f1c40f;
+            padding:12px 15px; text-align:left;
+            text-transform:uppercase; font-size:12px; letter-spacing:1px;
+        }
+        td { padding:12px 15px; border-bottom:1px solid #1e3d6e; color:#ddd; font-size:13px; }
+        tr:hover td { background-color:#152c50; color:#f1c40f; }
+        .badge {
+            display:inline-block; padding:2px 9px; border-radius:10px;
+            font-size:11px; font-weight:bold; background:#1a3e6e; color:#f1c40f;
+        }
+        .empty { padding:20px; text-align:center; color:#556; font-style:italic; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="navbar" style="margin-bottom:12px;">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <span> | </span>
+        <a th:href="@{/profile}">Profile</a>
+        <span> | </span>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+
+    <h1>My Activity History
+        <span style="font-size:14px; font-weight:normal; color:#aaa;"
+              th:if="${student != null}"
+              th:text="'— ' + ${student.name}"></span>
+    </h1>
+
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Date &amp; Time</th>
+                <th>Action</th>
+                <th>Detail</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(logs)}">
+                <td colspan="4" class="empty">No activity recorded yet.</td>
+            </tr>
+            <tr th:each="log, iter : ${logs}">
+                <td th:text="${iter.index + 1}">1</td>
+                <td th:text="${#temporals.format(log.timestamp,'dd MMM yyyy HH:mm:ss')}">-</td>
+                <td><span class="badge" th:text="${log.action}">ACTION</span></td>
+                <td th:text="${log.detail}">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
